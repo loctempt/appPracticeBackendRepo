@@ -4,6 +4,15 @@ public class RegisterRequest {
     private String username;
     private String userPassword;
     private String tel;
+    private String validationCode;
+
+    public String getValidationCode() {
+        return validationCode;
+    }
+
+    public void setValidationCode(String validationCode) {
+        this.validationCode = validationCode;
+    }
 
     public String getTel() {
         return tel;

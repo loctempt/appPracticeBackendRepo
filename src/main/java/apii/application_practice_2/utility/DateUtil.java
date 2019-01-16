@@ -12,12 +12,21 @@ public class DateUtil {
      */
     public static Date dateAfter(int days) {
         Calendar dateVar = Calendar.getInstance();
+        dateVar.set(Calendar.HOUR_OF_DAY, 0);
+        dateVar.set(Calendar.MINUTE, 0);
+        dateVar.set(Calendar.SECOND, 0);
         dateVar.add(Calendar.DATE, days);
         return dateVar.getTime();
     }
 
+    /**
+     * 格式化Date对象
+     * @param day Date实例
+     * @return 格式化的Date对象
+     */
     public static String parseDateObject(Date day) {
-        SimpleDateFormat format = new SimpleDateFormat("MM月dd日");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
         return format.format(day);
     }
+
 }

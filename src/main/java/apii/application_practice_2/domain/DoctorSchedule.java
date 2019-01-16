@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -15,7 +17,7 @@ public class DoctorSchedule {
     @Column(nullable = false)
     private Date doctorOnDutyDate;  // 坐诊日期
     private int doctorOnDutyTime;   // 坐诊时段（0-上午/1-下午）
-    private int patientCount;       // 时段病人计数
+    private int patientCount = 0;   // 时段病人计数
 
     public int getScheduleId() {
         return scheduleId;
@@ -37,8 +39,11 @@ public class DoctorSchedule {
         return doctorOnDutyDate;
     }
 
-    public void setDoctorOnDutyDate(Date doctorOnDutyDate) {
-        this.doctorOnDutyDate = doctorOnDutyDate;
+    public void setDoctorOnDutyDate(String onDutyDateStr) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = simpleDateFormat.parse(onDutyDateStr);
+        date.setTime(date.getTime() + 1000);
+        this.doctorOnDutyDate = date;
     }
 
     public int getDoctorOnDutyTime() {

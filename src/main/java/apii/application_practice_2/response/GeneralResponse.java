@@ -1,29 +1,41 @@
-package apii.application_practice_2.utility;
+package apii.application_practice_2.response;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class GeneralResponse {
-    public GeneralResponse(String status, String message, HashMap<String, String> extra){
+    private String status;
+    private String message;
+    private Object extra;
+
+    GeneralResponse(String status, String message, Object extra) {
         this.status = status;
         this.message = message;
         this.extra = extra;
     }
-    public static GeneralResponse success(String message){
+
+    GeneralResponse(GeneralResponse generalResponse) {
+        this.status = generalResponse.status;
+        this.message = generalResponse.message;
+        this.extra = generalResponse.extra;
+    }
+
+    public static GeneralResponse success(String message) {
         return new GeneralResponse("ok", message, new HashMap<>());
     }
-    public static GeneralResponse failure(String message){
+
+    public static GeneralResponse failure(String message) {
         return new GeneralResponse("failed", message, new HashMap<>());
     }
-    public static GeneralResponse success(){
+
+    static GeneralResponse success() {
         return new GeneralResponse("ok", "", new HashMap<>());
     }
-    public static GeneralResponse failure(){
+
+    static GeneralResponse failure() {
         return new GeneralResponse("failed", "", new HashMap<>());
     }
-    private String status;
-    private String message;
-    private Map<String, String> extra;
+
 
     public String getStatus() {
         return status;
@@ -41,11 +53,12 @@ public class GeneralResponse {
         this.message = message;
     }
 
-    public Map<String, String> getExtra() {
+    public Object getExtra() {
         return extra;
     }
 
-    public void setExtra(Map<String, String> extra) {
+    public GeneralResponse setExtra(Object extra) {
         this.extra = extra;
+        return this;
     }
 }

@@ -2,7 +2,7 @@ package apii.application_practice_2.controller;
 
 import apii.application_practice_2.domain.User;
 import apii.application_practice_2.domain.UserRepo;
-import apii.application_practice_2.utility.GeneralResponse;
+import apii.application_practice_2.response.GeneralResponse;
 import apii.application_practice_2.utility.SessionSchema;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +46,12 @@ public class LoginController {
             User user = userRepo.findByUsername(username);
             if (user.getUserPassword().equals(DigestUtils.sha1Hex(password))) {
                 HttpSession session = request.getSession();
+                // Session记录用户名
                 session.setAttribute(SessionSchema.USERNAME, username);
                 session.setMaxInactiveInterval((int) TimeUnit.DAYS.toMillis(7)); // Session有效期7天
-                return GeneralResponse.success();
+                // Session记录用户ID
+                session.setAttribute(SessionSchema.USER_ID, user.getUserId());
+                return GeneralResponse.success("已登录");
             }
             return GeneralResponse.failure("密码不正确");
         } catch (NullPointerException e) {
@@ -66,5 +69,14 @@ public class LoginController {
             e.printStackTrace();
         }
         return GeneralResponse.success("已注销登录");
+    }
+
+    // 登录状态
+    @RequestMapping("/ping")
+    GeneralResponse handlePing(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        if(session != null && session.getAttribute(SessionSchema.USERNAME) != null)
+            return GeneralResponse.success("登录信息未过期");
+        return GeneralResponse.failure("登录信息已过期");
     }
 }

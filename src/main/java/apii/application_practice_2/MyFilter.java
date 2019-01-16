@@ -30,7 +30,7 @@ public class MyFilter implements Filter {
         String uri = request.getRequestURI();
         System.out.println("filter url: " + uri);
 
-        if (session != null && session.getAttribute(SessionSchema.USERNAME) != null){
+        if (session != null && session.getAttribute(SessionSchema.USER_ID) != null){
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             System.out.println("*****请求已拦截*****");
