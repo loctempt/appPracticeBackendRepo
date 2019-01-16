@@ -17,13 +17,11 @@ import javax.print.Doc;
 public class DataAlterController {
 
     private DoctorRepo doctorRepo;
-    private UserRepo userRepo;
     private DoctorScheduleRepo scheduleRepo;
 
     @Autowired
-    DataAlterController(DoctorRepo doctorRepo, UserRepo userRepo, DoctorScheduleRepo scheduleRepo) {
+    DataAlterController(DoctorRepo doctorRepo, DoctorScheduleRepo scheduleRepo) {
         this.doctorRepo = doctorRepo;
-        this.userRepo = userRepo;
         this.scheduleRepo = scheduleRepo;
     }
 
@@ -55,18 +53,4 @@ public class DataAlterController {
         }
     }
 
-    // 创建新账号
-    @RequestMapping("/account_register")
-    GeneralResponse handleAccountRegister(@RequestBody RegisterRequest registerRequest) {
-        String username = registerRequest.getUsername();
-        if (userRepo.usersHavingUsername(username) == 0) {
-            User user = new User();
-            user.setUsername(registerRequest.getUsername());
-            user.setUserPassword(DigestUtils.sha1Hex(registerRequest.getUserPassword()));
-            user.setUserTel(registerRequest.getTel());
-            userRepo.save(user);
-            return GeneralResponse.success("用户" + registerRequest.getUsername() + "已创建");
-        }
-        return GeneralResponse.failure("用户已存在");
-    }
 }

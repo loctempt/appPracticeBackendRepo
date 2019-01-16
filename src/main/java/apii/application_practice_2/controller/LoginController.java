@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 //@SpringBootApplication
 @RestController
@@ -46,11 +47,24 @@ public class LoginController {
             if (user.getUserPassword().equals(DigestUtils.sha1Hex(password))) {
                 HttpSession session = request.getSession();
                 session.setAttribute(SessionSchema.USERNAME, username);
+                session.setMaxInactiveInterval((int) TimeUnit.DAYS.toMillis(7)); // Session有效期7天
                 return GeneralResponse.success();
             }
-            return GeneralResponse.failure();
+            return GeneralResponse.failure("密码不正确");
         } catch (NullPointerException e) {
             return GeneralResponse.failure("用户不存在");
         }
+    }
+
+    // 注销登录
+    @RequestMapping("/logout")
+    GeneralResponse handleLogout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        try {
+            session.removeAttribute(SessionSchema.USERNAME);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return GeneralResponse.success("已注销登录");
     }
 }

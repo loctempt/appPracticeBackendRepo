@@ -5,12 +5,21 @@ import javax.persistence.*;
 @Entity
 public class User {
     @Id
+    @GeneratedValue
+    private int userId;
     @Column(unique = true, length = 64)
     private String username;
     private String userPassword;
     @Column(length = 20)
     private String userTel;
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public void setUsername(String username) {
         this.username = username;
