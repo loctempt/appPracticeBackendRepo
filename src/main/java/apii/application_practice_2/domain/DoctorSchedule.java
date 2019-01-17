@@ -1,9 +1,8 @@
 package apii.application_practice_2.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import jdk.nashorn.internal.ir.annotations.Reference;
+
+import javax.persistence.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,6 +12,8 @@ public class DoctorSchedule {
     @Id
     @GeneratedValue
     private int scheduleId; // 日程ID
+//    @ManyToOne
+//    @JoinColumn()
     private int doctorId;   // 医生ID
     @Column(nullable = false)
     private Date doctorOnDutyDate;  // 坐诊日期

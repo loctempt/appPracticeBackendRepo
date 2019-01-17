@@ -1,19 +1,21 @@
 package apii.application_practice_2.controller;
 
-import apii.application_practice_2.domain.Doctor;
-import apii.application_practice_2.domain.DoctorRepo;
-import apii.application_practice_2.domain.DoctorSchedule;
-import apii.application_practice_2.domain.DoctorScheduleRepo;
+import apii.application_practice_2.domain.*;
 import apii.application_practice_2.request.DoctorInformationRequest;
 import apii.application_practice_2.request.DoctorScheduleRequest;
 import apii.application_practice_2.request.DoctorsOfDepartmentRequest;
+import apii.application_practice_2.request.UserReservationRequest;
 import apii.application_practice_2.response.*;
 import apii.application_practice_2.utility.DateUtil;
+import apii.application_practice_2.utility.SessionSchema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.print.Doc;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 
@@ -23,11 +25,13 @@ public class InformationController {
 
     private DoctorRepo doctorRepo;
     private DoctorScheduleRepo doctorScheduleRepo;
+    private ReservationRepo reservationRepo;
 
     @Autowired
-    InformationController(DoctorRepo doctorRepo, DoctorScheduleRepo doctorScheduleRepo) {
+    InformationController(DoctorRepo doctorRepo, DoctorScheduleRepo doctorScheduleRepo, ReservationRepo reservationRepo) {
         this.doctorRepo = doctorRepo;
         this.doctorScheduleRepo = doctorScheduleRepo;
+        this.reservationRepo = reservationRepo;
     }
 
     // 获取医生一个月内的坐诊时间表
@@ -73,8 +77,19 @@ public class InformationController {
     // 获取医生简略信息
     @RequestMapping("/doctor_information_brief")
     GeneralResponse getDoctorInformationBrief(@RequestBody DoctorInformationRequest informationRequest) {
-        int doctorId = informationRequest.getDoctorId();
-        Doctor doctor = doctorRepo.findByDoctorId(doctorId);
-        return new DoctorInformationBriefResponse().getResponse(doctor, "已获得医生简略信息");
+//        int doctorId = informationRequest.getDoctorId();
+        String doctorDepartment = informationRequest.getDoctorDepartment();
+//        Doctor doctor = doctorRepo.findByDoctorId(doctorId);
+        List<Doctor> doctors = doctorRepo.findByDoctorDepartment(doctorDepartment);
+        return new DoctorInformationBriefResponse().getResponse(doctors, "已获得医生简略信息");
+    }
+
+    @RequestMapping("/user_reservation")
+    GeneralResponse getUserReservation(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        int userId = (Integer) session.getAttribute(SessionSchema.USER_ID);
+        List<Object[]> reservationsFuture = reservationRepo.getFutureReservationList(userId, DateUtil.dateAfter(0));
+        List<Object[]> reservationsHistory = reservationRepo.getHistoryReservationList(userId, DateUtil.dateAfter(0));
+        return new UserReservationResponse().getResponse(reservationsFuture, reservationsHistory, "已获得预约列表");
     }
 }

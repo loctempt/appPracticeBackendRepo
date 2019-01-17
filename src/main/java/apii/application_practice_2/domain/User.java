@@ -1,6 +1,7 @@
 package apii.application_practice_2.domain;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 
 @Entity
 public class User {

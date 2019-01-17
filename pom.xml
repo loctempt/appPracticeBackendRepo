@@ -69,6 +69,12 @@
             <artifactId>CCP_REST_SMS_SDK_JAVA_v2.6.3r</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>3.4.49.ALL</version>
+        </dependency>
     </dependencies>
 
     <build>

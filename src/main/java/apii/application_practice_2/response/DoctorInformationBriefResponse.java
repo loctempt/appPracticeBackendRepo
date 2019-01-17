@@ -2,19 +2,23 @@ package apii.application_practice_2.response;
 
 import apii.application_practice_2.domain.Doctor;
 
-public class DoctorInformationBriefResponse extends ResponseBase{
+import javax.print.Doc;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DoctorInformationBriefResponse extends ResponseBase {
     private int doctorId;
     private String doctorName;
-    private String doctorDepartment;
+    private String doctorJob;
     private String doctorPositionalTitle;
 
     public DoctorInformationBriefResponse() {
     }
 
-    private DoctorInformationBriefResponse(int doctorId, String doctorName, String doctorDepartment, String doctorPositionalTitle) {
+    private DoctorInformationBriefResponse(int doctorId, String doctorName, String doctorJob, String doctorPositionalTitle) {
         this.doctorId = doctorId;
         this.doctorName = doctorName;
-        this.doctorDepartment = doctorDepartment;
+        this.doctorJob = doctorJob;
         this.doctorPositionalTitle = doctorPositionalTitle;
     }
 
@@ -34,12 +38,12 @@ public class DoctorInformationBriefResponse extends ResponseBase{
         this.doctorName = doctorName;
     }
 
-    public String getDoctorDepartment() {
-        return doctorDepartment;
+    public void setDoctorJob(String doctorJob) {
+        this.doctorJob = doctorJob;
     }
 
-    public void setDoctorDepartment(String doctorDepartment) {
-        this.doctorDepartment = doctorDepartment;
+    public String getDoctorJob() {
+        return doctorJob;
     }
 
     public String getDoctorPositionalTitle() {
@@ -52,13 +56,16 @@ public class DoctorInformationBriefResponse extends ResponseBase{
 
     @Override
     public GeneralResponse getResponse(Object obj, String message) {
-        Doctor doctor = (Doctor) obj;
-        DoctorInformationBriefResponse dibr = new DoctorInformationBriefResponse(
-                doctor.getDoctorId(),
-                doctor.getDoctorName(),
-                doctor.getDoctorDepartment(),
-                doctor.getDoctorPositionalTitle()
-        );
-        return GeneralResponse.success(message).setExtra(dibr);
+        List<Doctor> doctors = (List<Doctor>) obj;
+        ArrayList<DoctorInformationBriefResponse> doctorInformationBriefResponses = new ArrayList<>();
+        for (Doctor i : doctors) {
+            doctorInformationBriefResponses.add(new DoctorInformationBriefResponse(
+                    i.getDoctorId(),
+                    i.getDoctorName(),
+                    i.getDoctorJob(),
+                    i.getDoctorPositionalTitle()
+            ));
+        }
+        return GeneralResponse.success(message).setExtra(doctorInformationBriefResponses);
     }
 }
